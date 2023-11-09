@@ -42,6 +42,134 @@ private:
         gotoxy((selectedNode->data->getX() * 6), (selectedNode->data->getY() * 4) + 2);
         horiBlockLine();
     }
+
+    bool isColumnSame(itrtor start, itrtor end)
+    {
+        itrtor temp = start;
+        while (temp.curr->top != nullptr)
+        {
+            if (temp.curr == end.curr)
+                return true;
+            ++temp;
+        }
+        if (temp.curr == end.curr)
+            return true;
+
+        temp = start;
+        while (temp.curr->bottom != nullptr)
+        {
+            if (temp.curr == end.curr)
+                return true;
+            --temp;
+        }
+        if (temp.curr == end.curr)
+            return true;
+        return false;
+    }
+    bool isRowSame(itrtor start, itrtor end)
+    {
+        itrtor temp = start;
+        bool flag = true;
+        while (temp.curr->right != nullptr)
+        {
+            if (temp.curr == end.curr)
+                return flag;
+            temp++;
+        }
+        if (temp.curr == end.curr)
+            return flag;
+
+        temp = start;
+        while (temp.curr->left != nullptr)
+        {
+            if (temp.curr == end.curr)
+                return flag;
+            temp--;
+        }
+        if (temp.curr == end.curr)
+            return flag;
+        flag = false;
+        return flag;
+    }
+
+    void horiBlockLine()
+    {
+        char horiBlock = 254;
+        for (int i = 0; i < 6; i++)
+            cout << horiBlock;
+    }
+
+    node* getTopLeft()
+    {
+        node* temp = selectedNode;
+        while (temp->top)
+        {
+            temp = temp->top;
+        }
+        while (temp->left)
+        {
+            temp = temp->left;
+        }
+        return temp;
+    }
+    node* getTopRight()
+    {
+        node* temp = selectedNode;
+        while (temp->top)
+        {
+            temp = temp->top;
+        }
+        while (temp->right)
+        {
+            temp = temp->right;
+        }
+        return temp;
+    }
+    node* getBottomLeft()
+    {
+        node* temp = selectedNode;
+        while (temp->left)
+        {
+            temp = temp->left;
+        }
+        while (temp->bottom)
+        {
+            temp = temp->bottom;
+        }
+        return temp;
+    }
+    node* getBottomRight()
+    {
+        node* temp = selectedNode;
+        while (temp->right)
+        {
+            temp = temp->right;
+        }
+        while (temp->bottom)
+        {
+            temp = temp->bottom;
+        }
+        return temp;
+    }
+    node* getLeft()
+    {
+        node* temp = selectedNode;
+        while (temp->left)
+        {
+            temp = temp->left;
+        }
+        return temp;
+    }
+    node* getTop()
+    {
+        node* temp = selectedNode;
+        while (temp->top)
+        {
+            temp = temp->top;
+        }
+        return temp;
+    }
+
 public:
         MiniExcel()
         {
@@ -54,84 +182,6 @@ public:
             selectedNode->data->select();
         }
         
-        void horiBlockLine()
-        {
-            char horiBlock = 254;
-            for (int i = 0; i < 6; i++)
-                cout << horiBlock;
-        }
-        
-        node* getTopLeft()
-        {
-            node* temp = selectedNode;
-                while (temp->top)
-                {
-                    temp = temp->top;
-                }
-                while (temp->left)
-                {
-                    temp = temp->left;
-                }
-            return temp;
-        }
-        node* getTopRight()
-        {
-            node* temp = selectedNode;
-            while (temp->top)
-            {
-                temp = temp->top;
-            }
-            while (temp->right)
-            {
-                temp = temp->right;
-            }
-            return temp;
-        }
-        node* getBottomLeft()
-        {
-            node* temp = selectedNode;
-            while (temp->left)
-            {
-                temp = temp->left;
-            }
-            while (temp->bottom)
-            {
-                temp = temp->bottom;
-            }
-            return temp;
-        }
-        node* getBottomRight()
-        {
-            node* temp = selectedNode;
-            while (temp->right)
-            {
-                temp = temp->right;
-            }
-            while (temp->bottom)
-            {
-                temp = temp->bottom;
-            }
-            return temp;
-        }
-        node* getLeft()
-        {
-            node* temp = selectedNode;
-            while (temp->left)
-            {
-                temp = temp->left;
-            }
-            return temp;
-        }
-        node* getTop()
-        {
-            node* temp = selectedNode;
-            while (temp->top)
-            {
-                temp = temp->top;
-            }
-            return temp;
-        }
-
         void printSheet()
         {
             system("cls");
@@ -614,42 +664,6 @@ public:
         void paste()
         {}
 
-        bool isColumnSame(itrtor start,itrtor end)
-        {
-            itrtor temp = start;
-            while (temp.curr != nullptr)
-            {
-                if (temp.curr == end.curr)
-                    return true;
-                ++temp;
-            }
-            temp = start;
-            while (temp.curr != nullptr)
-            {
-                if (temp.curr == end.curr)
-                    return true;
-                --temp;
-            }
-            return false;
-        }
-        bool isRowSame(itrtor start,itrtor end)
-        {
-            itrtor temp = start;
-            while (temp.curr != nullptr)
-            {
-                if (temp.curr == end.curr)
-                    return true;
-                temp++;
-            }
-            temp = start;
-            while (temp.curr != nullptr)
-            {
-                if (temp.curr == end.curr)
-                    return true;
-                temp--;
-            }
-            return false;
-        }
         void extendColumn()
         {
             node* temp = getTopRight();

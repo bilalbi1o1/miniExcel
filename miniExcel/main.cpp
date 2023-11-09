@@ -7,7 +7,7 @@ int main()
 {
     MiniExcel excel;
     itrtor itr1 = itrtor(excel.getTopLeft());
-    itrtor itr2 = itrtor(excel.getTopRight());
+    itrtor itr2 = itrtor(excel.getBottomRight());
     excel.printSheet();
     while (true)
     {
@@ -42,8 +42,8 @@ int main()
         }
         if (GetAsyncKeyState(VK_F1))
         {
-            cout << excel.isRowSame(itr1,itr2);
-            cout << excel.isColumnSame(itr1,itr2);
+            //cout << excel.isRowSame(itr1,itr2);
+            //cout << excel.isColumnSame(itr1,itr2);
         }
         if (GetAsyncKeyState(VK_F2))
         {
