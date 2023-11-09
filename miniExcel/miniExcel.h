@@ -51,6 +51,7 @@ public:
                 extendColumn();
                 extendRow();
             }
+            selectedNode->data->select();
         }
         
         void horiBlockLine()
@@ -63,14 +64,14 @@ public:
         node* getTopLeft()
         {
             node* temp = selectedNode;
-            while (temp->left)
-            {
-                temp = temp->left;
-            }
-            while (temp->top)
-            {
-                temp = temp->top;
-            }
+                while (temp->top)
+                {
+                    temp = temp->top;
+                }
+                while (temp->left)
+                {
+                    temp = temp->left;
+                }
             return temp;
         }
         node* getTopRight()
@@ -267,7 +268,7 @@ public:
                     curr->top->right->left = curr->top;
                     curr = curr->right;
                 }
-            
+                printSheet();
         }
         void insertRowBelow()
         {
@@ -295,6 +296,7 @@ public:
                 curr->bottom->right->left = curr->bottom;
                 curr = curr->right;
             }
+            printSheet();
         }
         void insertColumnToRight()
         {
@@ -402,92 +404,114 @@ public:
 
         void deleteCellByLeftShift()
         {
-
+            node* temp = selectedNode;
+            moveLeft();
+            while (temp->right)
+            {
+                temp->data->setData(temp->right->data->getData());
+                temp = temp->right;
+            }
+            temp->data->setData("    ");
+            printSheet();
         }
         void deleteCellByUpShift()
-        {}
+        {
+            node* temp = selectedNode;
+            moveUp();
+            while (temp->bottom)
+            {
+                temp->data->setData(temp->bottom->data->getData());
+                temp = temp->bottom;
+            }
+            temp->data->setData("    ");
+            printSheet();
+        }
         void deleteColumn()
-        {}
+        {
+            if (!selectedNode->left && !selectedNode->right)
+                return; // Don't delete if there is only one column
+
+            node* temp = getTop();
+            node* toBeDeleted = nullptr;
+
+            if (selectedNode->left == nullptr)//if the column to be deleted is most left
+                selectedNode = selectedNode->right;
+            else                              //if the column to be deleted is most right
+                selectedNode = selectedNode->left;
+
+            if (!temp->left)//most left case
+                while (temp)
+                {
+                    temp->right->left = nullptr;
+                    toBeDeleted = temp;
+                    temp = temp->bottom;
+                    delete toBeDeleted;
+                }
+            else if (!temp->right)//most right case
+                while (temp)
+                {
+                    temp->left->right = nullptr;
+                    toBeDeleted = temp;
+                    temp = temp->bottom;
+                    delete toBeDeleted;
+                }
+            else//normal Case
+                while (temp)
+                {
+                    temp->left->right = temp->right;
+                    temp->right->left = temp->left;
+                    temp->left = nullptr;
+                    temp->right = nullptr;
+                    toBeDeleted = temp;
+                    temp = temp->bottom;
+                    delete toBeDeleted;
+                }
+            selectedNode->data->select();
+            printSheet();//update the console
+        }
         void deleteRow()
         {
-            if (selectedNode->top && selectedNode->bottom)
-            {
+            if (!selectedNode->top && !selectedNode->bottom)
                 return; // Don't delete if there is only one row
-            }
 
             node* temp = getLeft();
             node* toBeDeleted = nullptr;
-            while (temp)
-            {
-                temp->bottom->top = temp->top;
-                temp->top->bottom = temp->bottom;
-                temp->top = nullptr;
-                temp->bottom = nullptr;
-                temp->left = nullptr;
-                toBeDeleted = temp;   
-                temp = temp->right;
-                delete toBeDeleted;
-            }
-            printSheet();//update the console
-        }
-        void deleteRowGPT() {
-            if (!selectedNode || !selectedNode->top || !selectedNode->bottom) {
-                return; // Don't delete if there is only one row or selectedNode is not set.
-            }
 
-            // Update the 'up' and 'down' pointers of adjacent nodes
-            selectedNode->top->bottom = selectedNode->bottom;
-            selectedNode->bottom->top = selectedNode->top;
-
-            // Delete all nodes in the row
-            node* temp = selectedNode;
-            while (temp) {
-                node* toBeDeleted = temp;
-                temp = temp->right;
-                delete toBeDeleted;
-            }
-
-            printSheet(); // Update the console
-        }
-        void deleteRowBurhan()
-        {
-            if (selectedNode->top == nullptr)
-            {
-                return; // Don't delete the topmost row
-            }
-
-            node* curr = selectedNode;
-            node* previous = nullptr;
-
-            while (curr)
-            {
-                node* above = curr->top; // Cell in the row above
-                if (above)
-                {
-                    above->bottom = curr->bottom;
-                }
-
-                if (curr->bottom)
-                {
-                    curr->bottom->top = above;
-                }
-
-                if (curr->left)
-                {
-                    curr->left->right = curr->right;
-                }
-                if (curr->right)
-                {
-                    curr->right->left = curr->left;
-                }
-
-                previous = curr;
-                curr = curr->right;
-                delete previous;
-            }
-
+            if(selectedNode->top == nullptr)//if the row to be deleted is top row
+            selectedNode = selectedNode->bottom;
+            else //if(selectedNode->bottom == nullptr)//if the row to be deleted is bottom row
             selectedNode = selectedNode->top;
-            printSheet();
+
+            if (!temp->top)//top row Case
+                while (temp)
+                {
+                    temp->bottom->top = nullptr;
+                    toBeDeleted = temp;
+                    temp = temp->right;
+                    delete toBeDeleted;
+                }
+            else if(!temp->bottom)//bottom row case
+                while (temp)
+                {
+                    temp->top->bottom = nullptr;
+                    toBeDeleted = temp;
+                    temp = temp->right;
+                    delete toBeDeleted;
+                }
+            else//normal Case
+                while (temp)
+                {
+                    temp->bottom->top = temp->top;
+                    temp->top->bottom = temp->bottom;
+                    temp->top = nullptr;
+                    temp->bottom = nullptr;
+                    toBeDeleted = temp;   
+                    temp = temp->right;
+                    delete toBeDeleted;
+                }
+            
+            selectedNode->data->select();
+            printSheet();//update the console
         }
 
         void clearColumn()
@@ -590,6 +614,42 @@ public:
         void paste()
         {}
 
+        bool isColumnSame(itrtor start,itrtor end)
+        {
+            itrtor temp = start;
+            while (temp.curr != nullptr)
+            {
+                if (temp.curr == end.curr)
+                    return true;
+                ++temp;
+            }
+            temp = start;
+            while (temp.curr != nullptr)
+            {
+                if (temp.curr == end.curr)
+                    return true;
+                --temp;
+            }
+            return false;
+        }
+        bool isRowSame(itrtor start,itrtor end)
+        {
+            itrtor temp = start;
+            while (temp.curr != nullptr)
+            {
+                if (temp.curr == end.curr)
+                    return true;
+                temp++;
+            }
+            temp = start;
+            while (temp.curr != nullptr)
+            {
+                if (temp.curr == end.curr)
+                    return true;
+                temp--;
+            }
+            return false;
+        }
         void extendColumn()
         {
             node* temp = getTopRight();

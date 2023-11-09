@@ -42,17 +42,16 @@ int main()
         }
         if (GetAsyncKeyState(VK_F1))
         {
-            excel.deleteRowBurhan();
+            cout << excel.isRowSame(itr1,itr2);
+            cout << excel.isColumnSame(itr1,itr2);
         }
         if (GetAsyncKeyState(VK_F2))
         {
             excel.insertRowAbove();
-            excel.printSheet();
         }
         if (GetAsyncKeyState(VK_F3))
         {
             excel.insertRowBelow();
-            excel.printSheet();
         }
         if (GetAsyncKeyState(VK_F4))
         {

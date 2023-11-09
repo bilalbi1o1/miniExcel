@@ -36,14 +36,14 @@ public:
 
         return *this;
     }
-    itrtor& operator+(int)
+    itrtor& operator++()
     {
         if (curr && curr->top)
             curr = curr->top;
 
         return *this;
     }
-    itrtor& operator-(int)
+    itrtor& operator--()
     {
         if (curr && curr->bottom)
             curr = curr->bottom;
