@@ -27,7 +27,7 @@ public:
         left = nullptr;
         right = nullptr;
     }
-    void location()
+    void setLocation()
     {
         node* newNode = this;
         int counter = 0;

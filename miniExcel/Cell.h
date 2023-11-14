@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+//#include <sstream>
+
 using namespace std;
 
 enum Color
@@ -8,29 +10,40 @@ enum Color
     Blue,
     White
 };
+enum dataType
+{
+    String,
+    Int,
+    Float
+};
+bool isInteger(string val);
+bool isFloat(string val);
+
+
 class Cell
 {
     friend class node;
 private:
-    int x;
-    int y;
+    int x;//col
+    int y;//row
     Color color;
     string val = "    ";
-    string dataType;
+
 public:
+    dataType type;
     Cell()
     {
         x = y = 0;
         color = White;
         val = "    ";
     }
-    Cell(int x, int y, string value, string type)
+    Cell(int x, int y, string value,dataType type)
     {
         x = x;
         y = y;
         val = value;
         color = White;
-        dataType = type;
+        type = String;
     }
     string getData()
     {
@@ -38,19 +51,22 @@ public:
     }
     void setData(string value)
     {
-        string s = "";
+     
+        setDataType(value);
+
+        string str = "";
         for (int i = 0; i < 4 && i < value.length(); i++)
         {
-            s += value[i];
+            str += value[i];
         }
         if (value.length() < 4)
         {
             for (int i = 0; i < 4 - value.length(); i++)
             {
-                s += " ";
+                str += " ";
             }
         }
-        this->val = s;
+        this->val = str;
     }
     int getX()
     {
@@ -77,5 +93,28 @@ public:
         else
             return 15;
     }
+    dataType getDataType()
+    {
+        return type;
+    }
+    void getTypeCode(int code)
+    {
+        if (code == 1)
+            type = Int;
+        else if (code == 2)
+            type = Float;
+        else
+            type = String;
+    }
+    void setDataType(string value)
+    {
+        if (isInteger(value))
+            getTypeCode(1);
+        else if (isFloat(value))
+            getTypeCode(2);
+        else
+            getTypeCode(3);
+    }
+
 };
 
