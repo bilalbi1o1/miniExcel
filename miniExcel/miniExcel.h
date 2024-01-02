@@ -70,19 +70,6 @@ private:
         }
         return temp;
     }
-    node* getBottomRight()
-    {
-        node* temp = selectedNode;
-        while (temp->right)
-        {
-            temp = temp->right;
-        }
-        while (temp->bottom)
-        {
-            temp = temp->bottom;
-        }
-        return temp;
-    }
     node* getLeft()
     {
         node* temp = selectedNode;
@@ -322,6 +309,19 @@ public:
             }
             return temp;
         }
+        node* getBottomRight()
+        {
+            node* temp = selectedNode;
+            while (temp->right)
+            {
+                temp = temp->right;
+            }
+            while (temp->bottom)
+            {
+                temp = temp->bottom;
+            }
+            return temp;
+        }
         void updateSelectedCell()
         {
             SetConsoleTextAttribute(hConsole, selectedNode->data->getCode());
@@ -522,7 +522,7 @@ public:
                 curr->right->bottom->top = curr->right;
                 curr = curr->bottom;
             }
-
+            printSheet();
         }
         void insertColumnToLeft()
         {
@@ -565,6 +565,7 @@ public:
                 curr->bottom->left->top = curr->left;
                 curr = curr->bottom;
             }
+            printSheet();
         }
 
         void insertCellByRightShift()
@@ -929,7 +930,7 @@ public:
                 }
            node* temp = getBottomRight();
            gotoxy(temp->data->getX() * 6, (temp->data->getY() * 4) + 3);
-           cout << "copied";
+           cout << "copied                    ";
                 return arr;
         }
         void paste(vector<vector<string>> arr)

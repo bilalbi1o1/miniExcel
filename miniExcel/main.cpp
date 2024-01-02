@@ -82,11 +82,15 @@ int main()
                 if (GetAsyncKeyState(VK_OEM_MINUS))//to select the first iterator
                 {
                     itr1 = excel.selectedNode;
+                    auto temp = excel.getBottomRight();
+                    gotoxy(temp->data->getX() * 6, (temp->data->getY() * 4) + 3);
                     cout << "selected1";
                 } 
                 if (GetAsyncKeyState(VK_OEM_PLUS))//to select the second iterator
                 {
                     itr2 = excel.selectedNode;
+                    auto temp = excel.getBottomRight();
+                    gotoxy(temp->data->getX() * 6, (temp->data->getY() * 4) + 3);
                     cout << "selected2";
                 }
                 if ((GetAsyncKeyState(VK_CONTROL) & 0x8000) && (GetAsyncKeyState('6') & 0x8000))//Copy
